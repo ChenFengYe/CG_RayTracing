@@ -1,17 +1,20 @@
 #ifndef FATHERMESH_H
 #define FATHERMESH_H
  
-#include "Vec3d.h"
 #include "ray.h"
-#include "vector"
+#include <vector>
+#include "KDTree.h"
+
 using namespace std;
+class Light;
+class KDNode;
+
 enum MeshType
 {
 	SphereMesh = 1,
 	PlaneMesh = 2,
+	TriangleMesh = 3,
 };
-class PointLight;
-
 //-------------------------------------------------------------//
 // Father Mesh
 //-------------------------------------------------------------//
@@ -21,16 +24,17 @@ class FatherMesh
 public:
 	FatherMesh();
 	~FatherMesh();
-	Vec3d			GetPointValue(Ray* ray, PointLight* light, vector<FatherMesh*> meshs, Vec4d Insec, Vec3d EyeDire);
+	Vec3d			GetPointValue(Ray* ray, vector<Light*> lights, vector<FatherMesh*> meshs, Vec4d Insec, Vec3d EyeDire);
 	virtual Vec4d	GetIntersection(Ray* ray);
 	virtual Vec3d	GetInsecNormal(Vec3d Insec);
-
+	Vec3d			toVec3d(Vec4d v)	{return Vec3d(v.x(), v.y(), v.z());}
 
 public:
 	MeshType							m_meshType;
 	Vec3d								m_color = Vec3d(1.0, 1.0, 1.0);
 
-	
+public:
+	Mesh3D								mesh;
 };
 //-------------------------------------------------------------//
 // Plane Mesh
@@ -45,7 +49,6 @@ public:
 	Vec4d								GetIntersection(Ray* ray);
 	Vec3d								GetInsecNormal(Vec3d Insec);
 public:
-	MeshType							m_meshType = PlaneMesh;
 	double								A_;
 	double								B_;
 	double								C_;
@@ -65,9 +68,24 @@ public:
 	Vec4d								GetIntersection(Ray* ray);
 	Vec3d								GetInsecNormal(Vec3d Insec);
 public:
-	MeshType							m_meshType = SphereMesh;
 	Vec3d								m_center;
 	double								m_r;
+};
+//-------------------------------------------------------------//
+// Sphere Mesh
+//-------------------------------------------------------------//
+class TriMesh :public FatherMesh
+{
+public:
+	TriMesh();
+	TriMesh(char* file);
+	~TriMesh();
 
+	Vec4d								GetIntersection(Ray* ray);
+	Vec3d								GetInsecNormal(Vec3d Insec);
+	bool								LoadFromFile(char* file);
+
+private:
+	KDNode								KDRoot_;
 };
 #endif

@@ -2,8 +2,6 @@
 #define RAY_H
 
 #include "Vec3d.h"
-#include "MeshGroup.h"
-#include "ray.h"
 
 class Ray
 {
@@ -24,7 +22,7 @@ public:
 public:
 	Vec3d					m_origin;
 	Vec3d					m_dire;
-
+	double					m_d;	// distance between origin and intersection
 };
 
 #endif

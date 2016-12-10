@@ -1,7 +1,30 @@
-#include "Vec3d.h"
 #include "MeshGroup.h"
+#define eposlion 0.000001
 
-class PointLight
+enum LightType
+{
+	PointType = 1,
+	AreaType = 2,
+};
+//-------------------------------------------------------------//
+// Light
+//-------------------------------------------------------------//
+class Light
+{
+public:
+	Light()				{};
+	~Light()			{};
+	virtual vector<Ray>	GetLightSourceRay(vector<Ray> LightSourceRays, Vec3d insec){ return LightSourceRays; };
+	virtual Vec3d		GetPointColor(Vec3d p, Vec3d color, Vec3d normal, Vec3d EyeDire){ cout << "Light errer!"; return Vec3d(1, 1, 1); };
+	LightType							m_LightType;
+	Vec3d								m_center;
+	Vec3d								m_color;
+	double								m_lightStrength;
+};
+//-------------------------------------------------------------//
+// Point Light
+//-------------------------------------------------------------//
+class PointLight : public Light
 {
 public:
 	PointLight()
@@ -9,8 +32,23 @@ public:
 		m_center = Vec3d(0.0, 10.0, -8.0);
 		m_color = Vec3d(1.0, 1.0, 1.0);
 		m_lightStrength = 10;
+		m_LightType = PointType;
 	}
 	~PointLight(){}
+
+	vector<Ray> GetLightSourceRay(vector<Ray> LightSourceRays, Vec3d insec)
+	{
+		Vec3d	direc = m_center - insec;		direc.normalize();
+		insec += eposlion*direc;
+		
+		Ray		LightRay(insec, m_center);
+		// Store distance between light point and center for block detection
+		LightRay.m_d = (insec - m_center).length();
+
+		LightSourceRays.push_back(LightRay);
+		return LightSourceRays;
+	}
+
 
 	Vec3d GetPointColor(Vec3d p, Vec3d color, Vec3d normal, Vec3d EyeDire)
 	{
@@ -46,9 +84,17 @@ public:
 		return Vec3d(color.x(), color.y(), color.z());
 	}
 
-	Vec3d	m_center;
-	Vec3d	m_color;
-	double	m_lightStrength;
+};
+
+class AreaLight : public Light
+{
+public: 
+	AreaLight() 
+	{
+		m_LightType = AreaType;
+	};
+	~AreaLight() {};
 
 private:
+	double								A_, B_, C_, D_;	Vec3d								m_normal;
 };

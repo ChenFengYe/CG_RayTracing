@@ -1,10 +1,6 @@
-#include "Vec3d.h"
-#include "MeshGroup.h"
 #include "LightSource.h"
-#include "ray.h"
 
 using namespace std;
-#define eposlion 0.000001
 //-------------------------------------------------------------//
 // Father Mesh
 //-------------------------------------------------------------//
@@ -18,30 +14,46 @@ FatherMesh::~FatherMesh()
 
 }
 
-Vec3d FatherMesh::GetPointValue(Ray* ray, PointLight* light, vector<FatherMesh*> meshs, Vec4d Insec, Vec3d EyeDire)
+Vec3d FatherMesh::GetPointValue(
+	Ray* ray, 
+	vector<Light*> lights,
+	vector<FatherMesh*> meshs,
+	Vec4d insec, 
+	Vec3d EyeDire)
 {
-	// Is blocked ?
-	bool isBlocked = false;
-	Vec3d p = Vec3d(Insec.x(), Insec.y(), Insec.z());
-	Vec3d dire = light->m_center - p; dire.normalize();
-	p += eposlion*dire;
-	Ray LightRay(p, light->m_center);												// Get light ray
-	double d_light_insec = (p - light->m_center).length();							// Get distance between the light Source and the intersection point
-	for (int i = 0; i < meshs.size(); i++)
+	Vec3d pointColor = Vec3d(0, 0, 0);
+	Vec3d insecP = toVec3d(insec);
+
+	for (int i_l = 0; i_l < lights.size(); i_l++)
 	{
-		Vec4d lightPoint = meshs[i]->GetIntersection(&LightRay);
-		if (lightPoint[3] > 0 && lightPoint[3] < d_light_insec)
+		bool isBlocked = false;
+
+		// Get Light Ray
+		vector<Ray> LightRays;
+		LightRays = lights[i_l]->GetLightSourceRay(LightRays, insecP);
+
+		for (int i_ray = 0; i_ray < LightRays.size(); i_ray++)
 		{
-			isBlocked = true;
-			break;
+			// Is blocked ?
+			for (int i = 0; i < meshs.size(); i++)
+			{
+				Vec4d lightPoint = meshs[i]->GetIntersection(&LightRays[i_ray]);
+				if (lightPoint[3] > 0 && lightPoint[3] < LightRays[i_ray].m_d)
+				{
+					isBlocked = true;
+					break;
+				}
+			}
+
+			if (isBlocked)	continue; 
+			//double ambition = 0.3;
+			//if (isBlocked)  m_color*ambition;
+
+			// Get Color Value
+			Vec3d normal = GetInsecNormal(insecP);
+			pointColor += lights[i_l]->GetPointColor(insecP, m_color, normal, EyeDire);
 		}
 	}
-	double ambition = 0.3;
-	if (isBlocked)	return m_color*ambition;
-
-	// Get Color Value
-	Vec3d normal = GetInsecNormal(p);
-	Vec3d pointColor = light->GetPointColor(p, m_color, normal, EyeDire);
 	return Vec3d(pointColor.x(), pointColor.y(), pointColor.z());
 }
 
@@ -62,7 +74,6 @@ Vec3d FatherMesh::GetInsecNormal(Vec3d Insec)
 //-------------------------------------------------------------//
 Plane::Plane()
 {
-
 }
 
 Plane::~Plane()
@@ -78,12 +89,15 @@ Plane::Plane(double A, double B, double C, double D, Vec3d normal, Vec3d color)
 	D_ = D;
 	m_color = color;
 	m_normal = normal;
+	m_meshType = PlaneMesh;
 }
 
 Vec4d Plane::GetIntersection(Ray* ray)
 {
-	double k = -(ray->m_origin.x()*A_ + ray->m_origin.y()*B_ 
-		+ ray->m_origin.z()*C_+ D_) / (A_*ray->m_dire.x() + B_*ray->m_dire.y()+ C_*ray->m_dire.z());
+	// A(Ox + k*Dx) + B(Oy + k*Dy) + C(Oz +k*Dz) + D = 0
+	// k = -£¨A*Ox + B*Oy + C*Oz + D) / (A*Dx + B*Dy + C*Dz)
+	double k = -(ray->m_origin.x()*A_ + ray->m_origin.y()*B_ + ray->m_origin.z()*C_+ D_) 
+		/ (A_*ray->m_dire.x() + B_*ray->m_dire.y()+ C_*ray->m_dire.z());
 
 	Vec3d Insec = ray->m_origin + k*ray->m_dire;
 	if ((Insec - ray->m_origin).dot(ray->m_dire) < 0)
@@ -115,6 +129,7 @@ Sphere::Sphere(Vec3d center, double r, Vec3d color)
 	m_center = center;
 	m_r = r;
 	m_color = color;
+	m_meshType = SphereMesh;
 }
 
 Vec4d Sphere::GetIntersection(Ray* ray)
@@ -148,4 +163,43 @@ Vec3d Sphere::GetInsecNormal(Vec3d Insec)
 	normal = Insec - m_center;
 	normal.normalize();
 	return Vec3d(normal.x(), normal.y(), normal.z());
+}
+
+//-------------------------------------------------------------//
+// TriMesh Mesh
+//-------------------------------------------------------------//
+TriMesh::TriMesh()
+{
+
+}
+
+TriMesh::~TriMesh() 
+{
+
+}
+
+TriMesh::TriMesh(char* file)
+{
+	m_meshType = TriangleMesh;
+	LoadFromFile(file);
+	KDRoot_.tris_ = *mesh.get_faces_list();
+	KDRoot_.CreatKDTree(0);
+}
+
+Vec4d TriMesh::GetIntersection(Ray* ray) 
+{
+
+	return Vec4d(1,1,1,1);
+}
+
+Vec3d TriMesh::GetInsecNormal(Vec3d Insec)
+{
+
+	// careful
+	return Vec3d(1, 1, 1);
+}
+
+bool TriMesh::LoadFromFile(char* file)
+{
+	return mesh.LoadFromOBJFile(file);
 }

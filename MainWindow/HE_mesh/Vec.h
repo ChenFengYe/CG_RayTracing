@@ -464,10 +464,10 @@ typedef Vec<2,float> point;
 typedef Vec<3,float> point3;
 #endif
 
-typedef Vec<2,float> vec2;
-typedef Vec<3,float> vec3;
-typedef Vec<4, float> vec4;
-typedef Vec<5, float> vec5;
+typedef Vec<2, double> vec2;
+typedef Vec<3,double> vec3;
+typedef Vec<4, double> vec4;
+typedef Vec<5, double> vec5;
 typedef Vec<2,int> ivec2;
 typedef Vec<3,int> ivec3;
 typedef Vec<4,int> ivec4;

@@ -10,6 +10,8 @@
 
 #include "color.h"
 
+using std::unique_ptr;
+
 namespace lw {
 
 	enum class Tonemap {
@@ -22,7 +24,7 @@ namespace lw {
 	private:
 		unsigned int _width = 0U;
 		unsigned int _height = 0U;
-		std::unique_ptr<Color[]> _pixels = {};
+		std::unique_ptr<Color[]> _pixels;
 
 	public:
 		Image();

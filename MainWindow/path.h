@@ -46,8 +46,8 @@ namespace lw {
 			retval.push_back(str.substr(prev));
 			return retval;
 		}
+		double a = 1;
 	}
 
 }  // namespace lw
-
 #endif  // _lw_PATH_H_

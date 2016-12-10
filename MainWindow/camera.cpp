@@ -1,7 +1,4 @@
-#include "MeshGroup.h"
 #include "camera.h"
-#include "LightSource.h"
-#include "ray.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -35,7 +32,7 @@ void Camera::CreateCameraParam()
 	m_origin = m_center + m_L*m_lookAt + m_cols / 2.0*(-m_u) + m_rows / 2.0*(-m_v);
 }
 
-QImage* Camera::CreateImage(vector<FatherMesh*> meshs,PointLight* light)
+QImage* Camera::CreateImage(vector<FatherMesh*> meshs, vector<Light*> lights)
 {
 	CreateCameraParam();
 	m_picture = new QImage(m_cols, m_rows, QImage::Format_RGB32);
@@ -67,7 +64,8 @@ QImage* Camera::CreateImage(vector<FatherMesh*> meshs,PointLight* light)
 				// Get Point Value
 				if (Index_mesh >= 0)
 				{
-					pixelValue += meshs[Index_mesh]->GetPointValue(&(rays[i_ray]), light, meshs, Insec, -m_lookAt);
+					pixelValue += meshs[Index_mesh]->
+						GetPointValue(&(rays[i_ray]), lights, meshs, Insec, -m_lookAt);
 				}
 			}
 

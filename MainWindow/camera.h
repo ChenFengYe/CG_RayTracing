@@ -3,8 +3,9 @@
 
 #include <vector>
 #include <QImage>
-#include "Vec3d.h"
+#include "LightSource.h"
 #define PI 3.1415926
+
 using namespace std;
 
 // class used
@@ -22,7 +23,7 @@ public:
 	void				SetCameraPosition(Vec3d posi){ m_center = posi; }
 	void				SetCameraLookAt(Vec3d lookAt){ m_lookAt = lookAt; m_lookAt.normalize(); }
 	void				SetCameraSample(double sample){ m_sampleNum = sample; }
-	QImage*				CreateImage(vector<FatherMesh*> meshs, PointLight* light);
+	QImage*				CreateImage(vector<FatherMesh*> meshs, vector<Light*> lights);
 
 private:
 	void				CreateRayParam(vector<Ray>& rays, int w, int h, int s);

@@ -343,7 +343,7 @@ distribute, and modify this file as you see fit.
 // defining STBI_NO_SIMD.
 //
 // ===========================================================================
-//
+// chenxin
 // HDR image support   (disable by defining STBI_NO_HDR)
 //
 // stb_image now supports loading HDR images in general, and currently

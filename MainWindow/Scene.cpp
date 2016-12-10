@@ -1,10 +1,7 @@
 #include "Scene.h"
-#include "MeshGroup.h"
 #include "camera.h"
-#include "LightSource.h"
-#include "ray.h"
 #include "QImage"
-#include "Vec3d.h"
+#include "image.h"
 
 Scene::Scene()
 {
@@ -15,10 +12,9 @@ Scene::~Scene()
 {
 	if (camera_!=NULL)
 		delete camera_;
-
 	if (meshs_.size() > 0)
 	{
-		for (int i = 0; i < meshs_.size();i++)
+		for (int i = 0; i < meshs_.size(); i++)
 			delete meshs_[i];
 	}
 }
@@ -32,7 +28,6 @@ void Scene::BuildScene()
 void Scene::BuildCamera()
 {
 	camera_ = new Camera;
-
 }
 
 void Scene::BuildMeshGroup()
@@ -44,6 +39,8 @@ void Scene::BuildMeshGroup()
 	Plane *plane2 = new Plane(1.0, 0.0, 0.0, -3.0, Vec3d(1.0, 0.0, 0.0), Vec3d(0.5, 0.5, 0.5));
 	Plane *plane3 = new Plane(1.0, 0.0, 0.0, 3.0, Vec3d(-1.0, 0.0, 0.0), Vec3d(0.5, 0.5, 0.5));
 	Plane *plane4 = new Plane(0.0, 0.0, 1.0, -5.0, Vec3d(0.0, 0.0, 1.0), Vec3d(0.2, 0.3, 0.5));
+	TriMesh *Dragon = new TriMesh("D:\\Desktop\\MainWindow\\MainWindow\\OBJ\\dragon2.obj");
+
 	//Plane *plane5 = new Plane(1.0, 0.0, 0.0, 5.0, Vec3d(0.0, 1.0, 0.0), Vec3d(0.0, 0.0, 1.0));
 	meshs_.push_back(shpere1);
 	meshs_.push_back(shpere2);
@@ -52,11 +49,13 @@ void Scene::BuildMeshGroup()
 	meshs_.push_back(plane2);
 	meshs_.push_back(plane3);
 	meshs_.push_back(plane4);
+	//meshs_.push_back(Dragon);
 }
 
 void Scene::BuildLightSource()
 {
-	light_ = new PointLight;
+	PointLight *pointLight = new PointLight;
+	lights_.push_back(pointLight);
 }
 
 void Scene::TakePicture()
@@ -64,10 +63,16 @@ void Scene::TakePicture()
 	camera_->SetCameraPosition(camera_position);
 	camera_->SetCameraLookAt(camera_LookAt);
 	camera_->SetCameraSample(sample);
-	picture_ = camera_->CreateImage(meshs_, light_);
+	picture_ = camera_->CreateImage(meshs_, lights_);
 }
 
 void Scene::GetImage(QImage*& picture)
 {
 	picture = picture_;
+}
+
+void Scene::SampleAreaLight()
+{
+	lw::Image hdrImage = lw::Image::fromFile("..\\MainWindow\\HDR\\grace_cross.hdr");
+
 }

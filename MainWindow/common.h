@@ -10,7 +10,9 @@
 // ----------------------------------------------------------------------------
 // Parameter constants
 // ----------------------------------------------------------------------------
-static const double PI = 4.0 * atan(1.0);
+
+//static const double PI = 4.0 * atan(1.0);
+#define PI 4.0 * atan(1.0)
 static const double INV_PI = 1.0 / PI;
 static const double INFTY = 1.0e32;
 static const double EPS = 1.0e-6;
