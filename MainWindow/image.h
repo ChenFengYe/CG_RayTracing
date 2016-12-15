@@ -72,7 +72,6 @@ namespace lw {
 		void loadPng(const std::string& filename);
 		void savePng(const std::string& filename) const;
 	};
-
 }
 
 #endif  // lw_IMAGE_H_

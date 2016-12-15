@@ -55,6 +55,7 @@ private slots:
 	void							CameraLookAtZ(QString str);
 	void							SampleNum(QString str);
 	void							GetImage();
+	void							SaveImage();
 };
 
 #endif // MAINWINDOW_H

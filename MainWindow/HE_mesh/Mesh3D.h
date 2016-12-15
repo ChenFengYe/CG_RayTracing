@@ -4,7 +4,6 @@
 #include <map>
 #include "Vec.h"
 
-
 // forward declarations of mesh classes
 class HE_vert;
 class HE_edge;
@@ -114,7 +113,7 @@ public:
 class HE_face
 {
 public:
-	int			id_;
+	int			id_;			// begin form
 	HE_edge		*pedge_;		//!< one of the half-edges_list bordering the face
 	Vec3f		normal_;		//!< face normal
 	int			valence_;		//!< the number of edges_list
@@ -189,6 +188,7 @@ class Mesh3D
 
 private:
 	// mesh data
+	int   testa = 0;
 	std::vector<HE_vert*>	*pvertices_list_;		//!< store vertex
 	std::vector<HE_edge*>	*pedges_list_;		//!< store edges
 	std::vector<HE_face*>	*pfaces_list_;		//!< store faces
@@ -389,6 +389,11 @@ private:
 		neighbors.clear();
 		do 
 		{
+			if (testa == 45)
+			{
+				std::cout << testa++ << std::endl;
+			}
+			std::cout << testa ++ << std::endl;
 			neighbors.push_back(edge->pvert_->id());
 			edge = edge->ppair_->pnext_;
 		} while (edge!=get_vertex(vertid)->pedge_ && edge != NULL);

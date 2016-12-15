@@ -9,6 +9,8 @@
 #include <QtWidgets/QMessageBox>
 #include <QKeyEvent>
 #include <QPainter>
+#include <QDateTime>
+#include <QBuffer>
 
 MainWindow::MainWindow(QWidget *parent)
 	: QMainWindow(parent)
@@ -70,10 +72,24 @@ void MainWindow::GetImage()
 	{
 		delete picture_;
 	}
+
+	this->ui.pushButton->setDisabled(true);
+	
 	scene_.TakePicture();
 	scene_.GetImage(picture_);
+
+	this->ui.pushButton->setDisabled(false);
 }
 
+void MainWindow::SaveImage()
+{
+	if (picture_ != NULL && !picture_->isNull())
+	{
+		QDateTime time = QDateTime::currentDateTime();
+		std::cout << time.toString().data() << std::endl;
+		bool a = picture_->save("D:\\Desktop\\MainWindow\\RsultImage\\" + time.toString("dd.MM.yyyy") + ".png", "PNG", -1);
+	}
+}
 
 void MainWindow::paintEvent(QPaintEvent *paintevent)
 {

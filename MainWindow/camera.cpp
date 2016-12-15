@@ -2,13 +2,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <QApplication>
+
+Vec3d toVec3d(Vec4d v)
+{
+	return Vec3d(v.x(), v.y(), v.z());
+}
 
 Camera::Camera()
-	: m_center(0.0, 0.0, -2.0)
+	: m_center(0.0, 0.0, -6.0)
 	, m_lookAt(0.0, 0.0, 8.0)
 	, m_up(0.0, 1.0, 0.0)
 	, m_L(1.0)
-	, m_imageSize(800, 600)
+	, m_imageSize(1920, 1080)
 	, m_sampleNum(5)
 	, m_theta(PI/4.0)
 {
@@ -49,15 +55,45 @@ QImage* Camera::CreateImage(vector<FatherMesh*> meshs, vector<Light*> lights)
 			for (int i_ray = 0; i_ray < rays.size(); i_ray++)
 			{
 				// Get Intersection
-				Vec4d Insec = Vec4d(0.0, 0.0, 0.0, DBL_MAX);					// Vec4d(R, G, B, Distance)
-				int Index_mesh = -1;
+				Vec4d	Insec = Vec4d(0.0, 0.0, 0.0, DBL_MAX);					// Vec4d(R, G, B, Distance)
+				int		Index_mesh = -1;
+			
+				double	RayInsecDistanceMin = DBL_MAX;									// Min Distance for Insec
+
 				for (int i = 0; i < meshs.size(); i++)
 				{
 					Vec4d insec_temp = meshs[i]->GetIntersection(&rays[i_ray]);
-					if (insec_temp[3] > 0 && insec_temp[3] < Insec[3])
+					// hit nothing
+					if (DBL_MAX - insec_temp[3]< eposlion)		continue;
+
+					double RayInsecDistance;
+					
+					// Update RayInsecDistance
+					if (meshs[i]->m_meshType == TriangleMesh && insec_temp[3] != DBL_MAX)	// Get TriMesh Insection distance
+					{
+						RayInsecDistance =
+							(rays[i_ray].m_origin - toVec3d(insec_temp)).length();
+					}
+					else
+					{
+						RayInsecDistance = insec_temp[3];
+					}
+
+					if (RayInsecDistance < RayInsecDistanceMin)
 					{
 						Insec = insec_temp;
 						Index_mesh = i;
+						
+						// Update RayInsecDistanceMin
+						if (meshs[Index_mesh]->m_meshType == TriangleMesh)
+						{
+							RayInsecDistanceMin =
+								(rays[i_ray].m_origin - toVec3d(Insec)).length();
+						}
+						else
+						{
+							RayInsecDistanceMin = Insec[3];
+						}
 					}
 				}
 
@@ -78,6 +114,7 @@ QImage* Camera::CreateImage(vector<FatherMesh*> meshs, vector<Light*> lights)
 			if (pixelValue.z() > 255) pixelValue.z() = 255;
 			m_picture->setPixel(col, row, qRgb(pixelValue.x(), pixelValue.y(), pixelValue.z()));
 			//m_picture->setPixel(col, row, qRgb(pixelValue.x(), pixelValue.y(), pixelValue.z()));
+			QApplication::processEvents();
 		}
 	}
 	return m_picture;

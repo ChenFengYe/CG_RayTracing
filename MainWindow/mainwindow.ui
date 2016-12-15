@@ -112,7 +112,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>-2.0</string>
+     <string>-3.0</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="lineEdit_3">
@@ -158,13 +158,26 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>250</y>
+      <y>310</y>
       <width>75</width>
       <height>23</height>
      </rect>
     </property>
     <property name="text">
      <string>Run</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_2">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>260</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Save</string>
     </property>
    </widget>
   </widget>
@@ -193,22 +206,6 @@
   <include location="mainwindow.qrc"/>
  </resources>
  <connections>
-  <connection>
-   <sender>lineEdit</sender>
-   <signal>textChanged(QString)</signal>
-   <receiver>MainWindowClass</receiver>
-   <slot>SampleNum(QString)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>60</x>
-     <y>94</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>168</x>
-     <y>95</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>lineEdit_2</sender>
    <signal>textChanged(QString)</signal>
@@ -313,11 +310,43 @@
    <hints>
     <hint type="sourcelabel">
      <x>54</x>
-     <y>298</y>
+     <y>367</y>
     </hint>
     <hint type="destinationlabel">
      <x>393</x>
      <y>222</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lineEdit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>MainWindowClass</receiver>
+   <slot>SampleNum(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>60</x>
+     <y>94</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>168</x>
+     <y>95</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_2</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindowClass</receiver>
+   <slot>SaveImage()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>57</x>
+     <y>306</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>485</x>
+     <y>319</y>
     </hint>
    </hints>
   </connection>
@@ -331,5 +360,6 @@
   <slot>SampleNum(QString)</slot>
   <slot>CameraLookAtZ(QString)</slot>
   <slot>GetImage()</slot>
+  <slot>SaveImage()</slot>
  </slots>
 </ui>

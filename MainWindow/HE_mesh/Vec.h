@@ -474,6 +474,7 @@ typedef Vec<4,int> ivec4;
 
 //-------------------------------------------
 // Chen Xin 2016.11.9
+typedef Vec<2, int> Vec2i;
 typedef Vec<2, double> Vec2d;
 typedef Vec<3, double> Vec3d;
 typedef Vec<4, double> Vec4d;

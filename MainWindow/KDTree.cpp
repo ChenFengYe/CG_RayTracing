@@ -37,6 +37,7 @@ void KDNode::CreatKDTree(int depth)
 	{
 		leftNode_ = new KDNode();
 		rightNode_ = new KDNode();
+		BuildBoundingBox(tris_);
 		return;
 	};
 
@@ -62,6 +63,10 @@ void KDNode::CreatKDTree(int depth)
 
 	// Build Child Node
 	leftNode_ = new KDNode();
+	//if (tris_.size() == 2)
+	//{
+	//	cout << "stop" << endl;
+	//}
 	copy(tris_.begin(),
 		tris_.begin() + tris_.size() / 2,
 		back_inserter(leftNode_->tris_));

@@ -3,6 +3,8 @@
 
 #include <vector>
 #include "Vec3d.h"
+#include "image.h"
+#include "camera.h"
 
 using namespace std;
 
@@ -28,12 +30,14 @@ private:
 	void							BuildCamera();
 	void							BuildMeshGroup();
 	void							BuildLightSource();
-	void							SampleAreaLight();
+	void							SampleCubeLight();
 
 	Camera							*camera_;
 	QImage							*picture_;
 	vector<FatherMesh*>				meshs_;
 	vector<Light*>					lights_;
+	CubeLight						*cubeLight;
+	lw::Image						hdrImage;
 	//vector<light>					lights_;
 	//QImage*
 };

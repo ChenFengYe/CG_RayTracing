@@ -41,6 +41,7 @@ public:
     QLineEdit *lineEdit_6;
     QLineEdit *lineEdit_7;
     QPushButton *pushButton;
+    QPushButton *pushButton_2;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -87,7 +88,10 @@ public:
         lineEdit_7->setGeometry(QRect(90, 200, 31, 21));
         pushButton = new QPushButton(centralWidget);
         pushButton->setObjectName(QStringLiteral("pushButton"));
-        pushButton->setGeometry(QRect(20, 250, 75, 23));
+        pushButton->setGeometry(QRect(20, 310, 75, 23));
+        pushButton_2 = new QPushButton(centralWidget);
+        pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
+        pushButton_2->setGeometry(QRect(20, 260, 75, 23));
         MainWindowClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindowClass);
         menuBar->setObjectName(QStringLiteral("menuBar"));
@@ -101,7 +105,6 @@ public:
         MainWindowClass->setStatusBar(statusBar);
 
         retranslateUi(MainWindowClass);
-        QObject::connect(lineEdit, SIGNAL(textChanged(QString)), MainWindowClass, SLOT(SampleNum(QString)));
         QObject::connect(lineEdit_2, SIGNAL(textChanged(QString)), MainWindowClass, SLOT(CameraPositionX(QString)));
         QObject::connect(lineEdit_3, SIGNAL(textChanged(QString)), MainWindowClass, SLOT(CameraLookAtX(QString)));
         QObject::connect(lineEdit_4, SIGNAL(textChanged(QString)), MainWindowClass, SLOT(CameraPositionY(QString)));
@@ -109,6 +112,8 @@ public:
         QObject::connect(lineEdit_6, SIGNAL(textChanged(QString)), MainWindowClass, SLOT(CameraLookAtY(QString)));
         QObject::connect(lineEdit_7, SIGNAL(textChanged(QString)), MainWindowClass, SLOT(CameraLookAtZ(QString)));
         QObject::connect(pushButton, SIGNAL(clicked()), MainWindowClass, SLOT(GetImage()));
+        QObject::connect(lineEdit, SIGNAL(textChanged(QString)), MainWindowClass, SLOT(SampleNum(QString)));
+        QObject::connect(pushButton_2, SIGNAL(clicked()), MainWindowClass, SLOT(SaveImage()));
 
         QMetaObject::connectSlotsByName(MainWindowClass);
     } // setupUi
@@ -122,11 +127,12 @@ public:
         label_3->setText(QApplication::translate("MainWindowClass", "Camera Position", 0));
         label_4->setText(QApplication::translate("MainWindowClass", "Camera LookAt", 0));
         lineEdit_4->setText(QApplication::translate("MainWindowClass", "0.0", 0));
-        lineEdit_5->setText(QApplication::translate("MainWindowClass", "-2.0", 0));
+        lineEdit_5->setText(QApplication::translate("MainWindowClass", "-3.0", 0));
         lineEdit_3->setText(QApplication::translate("MainWindowClass", "0.0", 0));
         lineEdit_6->setText(QApplication::translate("MainWindowClass", "0.0", 0));
         lineEdit_7->setText(QApplication::translate("MainWindowClass", "1.0", 0));
         pushButton->setText(QApplication::translate("MainWindowClass", "Run", 0));
+        pushButton_2->setText(QApplication::translate("MainWindowClass", "Save", 0));
     } // retranslateUi
 
 };

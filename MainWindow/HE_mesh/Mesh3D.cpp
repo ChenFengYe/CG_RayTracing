@@ -247,7 +247,19 @@ bool Mesh3D::LoadFromOBJFile(const char* fins)
 					tok = strtok(NULL," ");
 					strcpy(temp, tok);
 					temp[strcspn(temp," ")] = 0;
-					nvv[i] = (float)atof(temp);
+					if (i == 0)	// x
+					{
+						nvv[i] = -(float)atof(temp);
+					}
+					if (i == 1) // y
+					{
+						nvv[i] = (float)atof(temp);
+					}
+					if (i == 2) // z
+					{
+						nvv[i] = -(float)atof(temp);
+					}
+
 				}
 				InsertVertex(nvv);
 			}
@@ -418,7 +430,7 @@ void Mesh3D::UpdateMesh(void)
 	UpdateNormal();
 	ComputeBoundingBox();
 	ComputeAvarageEdgeLength();
-	SetNeighbors();
+	//SetNeighbors();
 }
 
 void Mesh3D::SetBoundaryFlag(void)
